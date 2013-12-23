@@ -8,6 +8,5 @@ exportMethods(plot)
 exportMethods(barplot)
 exportMethods(summary)
 export(CoModescluster)
-
 importFrom(graphics,plot)
 importFrom(graphics,barplot)
