@@ -1,0 +1,13 @@
+exportClasses(CoModes_res)
+exportClasses(CoModes_data)
+exportClasses(CoModes_param)
+exportClasses(CoModes_criteria)
+exportClasses(CoModes_indiv)
+exportClasses(CoModes_model)
+exportMethods(plot)
+exportMethods(barplot)
+exportMethods(summary)
+export(CoModescluster)
+
+importFrom(graphics,plot)
+importFrom(graphics,barplot)

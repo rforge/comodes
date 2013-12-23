@@ -1,0 +1,22 @@
+Package: CoModes
+Type: Package
+Title: This package performs clustering for categorical dataset by using a conditional modes mixture model.
+Version: 1.0
+Date: 2013-09-16
+Author: Matthieu Marbac & Christophe Biernacki & Vincent Vandewalle
+Maintainer: Matthieu Marbac <matthieu.marbac-lourdelle@inria.fr>
+Description: This package performs clustering for categorical data-set by the
+    conditional modes mixture modeldel. It contains a function
+    CoModescluster().
+License: GPL
+Depends: 
+ MCMCpack (>= 1.3.3),
+ zipfR,
+ FactoMineR,
+ methods,
+LinkingTo:
+ MCMCpack, 
+ zipfR,
+ FactoMineR,
+ methods
+
