@@ -1,6 +1,4 @@
 ## one algorithm EM for estimate the paramters
-library(MCMCpack)
-library(ade4)
 
 XEM <- function(x,g,ell,m,tol){
   #notations
