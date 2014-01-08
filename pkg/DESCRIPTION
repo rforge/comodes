@@ -8,15 +8,27 @@ Maintainer: Matthieu Marbac <matthieu.marbac-lourdelle@inria.fr>
 Description: This package performs clustering for categorical data-set by the
     conditional modes mixture modeldel. It contains a function
     CoModescluster(). 
-License: GPL
+License: GPL (>=2)
 Depends: 
  MCMCpack (>= 1.3.3),
  zipfR,
  FactoMineR,
  methods,
+ R (>= 2.14)
 LinkingTo:
  MCMCpack, 
  zipfR,
- FactoMineR,
- methods
-
+ FactoMineR
+Collate:
+ Alpha_organize.R,
+ Barplot.R,
+ CIM.R,
+ Class_definitions.R,
+ CoModes.R,
+ Gibbs_ell.R,
+ Gibbs_model.R,
+ Gibbs_param.R,
+ Plot.R,
+ Summary.R,
+ Tools.R,
+ XEM.R
