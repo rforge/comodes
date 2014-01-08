@@ -29,7 +29,7 @@ acute[,1] <- factor(acute[,1],levels=1:3,labels=c("cold","normal","fiever"))
 # Model selection and parameter estimation of CMM
 res.CoModes <- CoModescluster(acute[,1:6],2)
 
-# Plot of the individuals in a multiple correspondance analysis map, 
+# Plot of the individuals in a multiple correspondence analysis map, 
 # the colors and symbols indicate the class membership estimated by CMM.
 plot(res.CoModes,c(2,3))
 }
