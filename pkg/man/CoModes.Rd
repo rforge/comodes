@@ -6,7 +6,7 @@
 \description{
   CoModes is a tool for fitting, on a categorical data set,
   a mixture model of conditional modes distributions,
-  which are multinational distribution where few free parameters correspond to the
+  which are multinational distributions where few free parameters correspond to the
   largest probability locations.
 }
 \details{
