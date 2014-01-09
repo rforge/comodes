@@ -30,7 +30,7 @@ setMethod(
         for (k in 2:height@model@nbclasses){
           if (height@model@modes[k,j]<nrow(pro)){
             for (h in 1:sum(height@model@sigma==j)){
-              names_var[[h]] <-  cbind(names_var[[h]],c(height@param@alpha[[k]][[j]][1:height@model@modes[k,j],1+h],rep(".",nrow(pro)-height@model@modes[k,j]) ))
+              names_var[[h]] <-  cbind(names_var[[h]],c(as.character(height@param@alpha[[k]][[j]][1:height@model@modes[k,j],1+h]),rep(".",nrow(pro)-height@model@modes[k,j]) ))
             }
             pro <- cbind(pro,c(height@param@alpha[[k]][[j]][1:height@model@modes[k,j],1],rep(0,nrow(pro)-height@model@modes[k,j]) ))
           }else if (height@model@modes[k,j]>nrow(pro)){
@@ -40,7 +40,7 @@ setMethod(
             pro <- rbind(pro,matrix(0,height@model@modes[k,j]-nrow(pro),ncol(pro)))
             pro <- cbind(pro,height@param@alpha[[k]][[j]][1:height@model@modes[k,j],1])
             for (h in 1:sum(height@model@sigma==j)){
-              names_var[[h]] <-  cbind(names_var[[h]],height@param@alpha[[k]][[j]][1:height@model@modes[k,j],1+h])
+              names_var[[h]] <-  cbind(names_var[[h]],as.character(height@param@alpha[[k]][[j]][1:height@model@modes[k,j],1+h]))
             }
           }else{
             pro <- cbind(pro,height@param@alpha[[k]][[j]][1:height@model@modes[k,j],1])
