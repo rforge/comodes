@@ -53,7 +53,7 @@ CoModescluster <- function(x, g, Gibbs_init=2,  Gibbs_iter=50, Gibbs_chauffe=50,
   output$modalities <- moda
   output$levels <- levels
   names(output$model$sigma) <- colnames(x)
-  print(output$alpha)
+ # print(output$alpha)
   output <- CoModes_res(output)
   
   return(output)
