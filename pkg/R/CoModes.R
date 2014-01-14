@@ -28,7 +28,7 @@ CoModescluster <- function(x, g, Gibbs_init=2,  Gibbs_iter=50, Gibbs_chauffe=50,
   }
   
   if ((g != ceiling(g))||(g<1))
-    stop("Class number have to be integer!")
+    stop("Class number has to be integer!")
     
   
   moda <- rep(0,ncol(x))
