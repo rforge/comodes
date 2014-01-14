@@ -19,12 +19,26 @@ NULL
 #'
 
 CoModescluster <- function(x, g, Gibbs_init=2,  Gibbs_iter=50, Gibbs_chauffe=50, EM_init=5, EM_tol=10^(-3) ){
+  if ( is.data.frame(x) == FALSE){
+    stop("The data set has to be a data.frame!")
+  }
+  
+  if ( any(is.na(x)) == TRUE){
+    stop("Missing values are not allowed!")
+  }
+  
+  if ((g != ceiling(g))||(g<1))
+    stop("Class number have to be integer!")
+    
   
   moda <- rep(0,ncol(x))
   levels <- list()
   cp_x <- x
   for (j in 1:ncol(x)){
     levels[[j]] <- levels(x[,j])
+    if ( length(levels[[j]])<2)
+      stop("All the factors have to be two levels at least!")
+      
     x[,j] <- as.numeric(x[,j])
     moda[j] <- length(unique(x[,j]))
   }
