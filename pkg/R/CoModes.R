@@ -37,7 +37,7 @@ CoModescluster <- function(x, g, Gibbs_init=2,  Gibbs_iter=50, Gibbs_chauffe=50,
   for (j in 1:ncol(x)){
     levels[[j]] <- levels(x[,j])
     if ( length(levels[[j]])<2)
-      stop("All the factors have to be two levels at least!")
+      stop("All the factors have to be at least two levels!")
       
     x[,j] <- as.numeric(x[,j])
     moda[j] <- length(unique(x[,j]))
