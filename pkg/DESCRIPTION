@@ -15,9 +15,11 @@ Depends:
  ade4,
  zipfR,
  FactoMineR,
- methods
+ methods,
+ parallel
 LinkingTo:
  MCMCpack, 
  zipfR,
  ade4,
- FactoMineR
+ FactoMineR,
+ parallel
