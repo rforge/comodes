@@ -7,7 +7,7 @@ GenerateCandidate <- function(model, modalities){
   model_cand$sigma[var] <- bto
   if (bto==bfrom){
     bto <- max(model$sigma) + 1
-    model_cand$sigma[var] <- length(model$sigma)+1
+    model_cand$sigma[var] <- max(model$sigma)+1
     model_cand$ell <- cbind(model_cand$ell, rep(1,model_cand$g))
   }
   ratioproba <- max(model$sigma)/max(model_cand$sigma)
@@ -49,17 +49,20 @@ CopyModel <- function(input, modalities){
 ### This algorithm sample the models according to their posterior distribution
 CMM_model <- function(x, modalities, g, burnin, nbiter){
   y <- x
+  for (j in 1:ncol(x)) y[,j] <- as.numeric(x[,j])
   currentmodel <- list(g=g, sigma=1:ncol(x), ell=matrix(modalities-1,g, ncol(x),byrow=TRUE), blocklevels=modalities)
-  proba <- CMM_MLE(x, currentmodel, 1, 0.1)$proba
+  proba <- CMM_MLE(y, currentmodel, 1, 0.1)$proba
   sauv_sigma <- matrix(0, 1, ncol(x))
   eff_sigma <- 0
   sauv_ell <- list()  
   for (it in 1:(burnin+nbiter)){
     #échantillonnage des appartenances des individus aux classes"
     z <- apply(proba, 1, function(sa) sample(1:length(sa),1, prob = sa))
+    #save(z, currentmodel, file = "current.rda")
     ### saut de model
     # generation du candidat
     candidate <- GenerateCandidate(currentmodel, modalities)
+    #save(candidate, file = "candidate.rda")
     # ratio contains is the logarithm of the ratio between the probability of the model generation
     ratio <- log(candidate$ratioproba)
     # ratio is updated on the part of the integrated complete-data likelihood of the candidate and current models

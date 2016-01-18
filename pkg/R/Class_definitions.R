@@ -112,7 +112,6 @@ CoModes_res <- function(input){
   criteria <- CoModes_criteria(input$loglike, input$bic)
   
   output <- new("CoModes_res",data=data, model=model, param=param, indiv=indiv, criteria=criteria)
-  
-  return(Alpha_organize(output))
-#  return(output)
+  output <- Alpha_organize(output)
+  return(output)
 }

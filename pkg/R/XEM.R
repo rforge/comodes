@@ -13,16 +13,16 @@ XEM <- function(x, model, tol){
     proba <- matrix(colSums(tik)/n,n,model$g,byrow=TRUE);
     for (k in 1:model$g){
       for (j in 1:d){
-        tmp <- rep(0,length(unique(x[,j])))
-        names(tmp) <- unique(x[,j])
-        loc <- 1
-        for (h in unique(x[,j])){
-          tmp[loc] <- sum((x[,j]==h)*tik[,k])/sum(tik[,k])
-          loc <- loc+1
+        if (model$ell[k,j]>0){
+          tmp <- rep(0, model$blocklevels[j])
+          names(tmp) <- 1:length(tmp)
+          for (h in unique(x[,j]))  tmp[h] <- sum((x[,j]==h)*tik[,k])/sum(tik[,k])
+          tmp <- sort(tmp,decreasing=TRUE)
+          alpha_tmp <- rep(sum(tmp[-c(1:model$ell[k,j])])/(model$blocklevels[j]-model$ell[k,j]),model$blocklevels[j])
+          alpha_tmp[as.numeric(names(tmp))[1:model$ell[k,j]]] <- tmp[1:model$ell[k,j]]
+        }else{
+          alpha_tmp <- rep(1/model$blocklevels[j],model$blocklevels[j])
         }
-        tmp <- sort(tmp,decreasing=TRUE)
-        alpha_tmp <- rep(sum(tmp[-c(1:model$ell[k,j])])/(model$blocklevels[j]-model$ell[k,j]),model$blocklevels[j])
-        alpha_tmp[as.numeric(names(tmp))[1:model$ell[k,j]]] <- tmp[1:model$ell[k,j]]
         proba[,k] <- proba[,k]* alpha_tmp[x[,j]]
       }
     }
@@ -33,8 +33,6 @@ XEM <- function(x, model, tol){
 }
 ## This function returns the MLE by performing different initialization of EM algorithm
 CMM_MLE <- function(x, model, nbinit, tol){
-  #x <- resume_data(x,model$sigma,m)
-  #x <- ComputeLevelAllBlock(x, model$sigma, m)
   ref <- XEM(x,model,tol)
   for (it in 2:nbinit){cand <- XEM(x,model,tol); if (cand$loglike>ref$loglike){ref <- cand;}}
   tik <- ref$proba/rowSums(ref$proba)
@@ -44,13 +42,9 @@ CMM_MLE <- function(x, model, nbinit, tol){
     alpha[[k]] <- list();
     for (j in 1:ncol(x)){
       if (model$ell[k,j]>0){
-        tmp <- rep(0,length(unique(x[,j])))
-        names(tmp) <- unique(x[,j])
-        loc <- 1
-        for (h in unique(x[,j])){
-          tmp[loc] <- sum((x[,j]==h)*tik[,k])/sum(tik[,k])
-          loc=loc+1
-        }
+        tmp <- rep(0, model$blocklevels[j])
+        names(tmp) <- 1:length(tmp)
+        for (h in unique(x[,j])) tmp[h] <- sum((x[,j]==h)*tik[,k])/sum(tik[,k])
         tmp <- sort(tmp,decreasing=TRUE)
         alpha[[k]][[j]] <- rep(sum(tmp[-c(1:model$ell[k,j])])/(model$blocklevels[j]-model$ell[k,j]),model$ell[k,j]+1)
         alpha[[k]][[j]][1:model$ell[k,j]] <- tmp[1:model$ell[k,j]]
@@ -59,11 +53,10 @@ CMM_MLE <- function(x, model, nbinit, tol){
         alpha[[k]][[j]] <- 1/model$blocklevels[j]
         names(alpha[[k]][[j]]) <- "other"
       }
-
+      
     }
   }
-  cl <- rep(0,nrow(tik))
-  for (k in 1:model$g){cl[which(rowSums(sweep(ref$proba,1,ref$proba[,k],"<="))==model$g)]<-k}
+  cl <- apply(tik, 1, which.max)
   return(list(model=model,tik=tik,proba=ref$proba,partition=cl,alpha=alpha,pi=pi,loglike=ref$loglike,bic=ref$loglike-(sum(model$ell)+model$g-1)*0.5*log(nrow(x))))
 }
 
