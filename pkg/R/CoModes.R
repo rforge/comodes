@@ -60,7 +60,7 @@ OneAnalysis <- function(nb, input){
   return(res_model)
 }
 
-CoModescluster <- function(x, g, Gibbs_init=20,  Gibbs_iter=(ncol(x)*g*200), burnin=(ncol(x)*g*200), EM_init=25, EM_tol=10^(-3), nbcores=Gibbs_init){
+CoModescluster <- function(x, g, Gibbs_init=30,  Gibbs_iter=min(4000,(ncol(x)*400)), burnin=min(ncol(x)*400,4000), EM_init=25, EM_tol=10^(-3), nbcores=Gibbs_init){
   input <- CheckInputs(x, g, Gibbs_init,  Gibbs_iter, burnin, EM_init, EM_tol)
   nbcores <- min(detectCores(all.tests = FALSE, logical = FALSE), nbcores)
   if ((nbcores>1)&&(Sys.info()["sysname"] != "Windows")){
