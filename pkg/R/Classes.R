@@ -89,9 +89,28 @@ CoModes_criteria <- function(loglike, bic){
   new("CoModes_criteria", loglike=loglike, bic=bic)
 }
 
-
+###################################################################################
+##' Constructor of [\code{\linkS4class{CoModesResults}}] class
+##' 
+##' This is a class of the results of CoModes.
+##'
+##' \describe{
+##'   \item{data}{}
+##'   \item{model}{}
+##'   \item{param}{}
+##'   \item{indiv}{}
+##'   \item{criteria}{}
+##' }
+##'
+##' @examples
+##'   getSlots("CoModesResults")
+##'
+##' @name CoModesResults-class
+##' @rdname CoModesResults-class
+##' @exportClass CoModesResults
+##'
 setClass(
-  Class="CoModes_res",
+  Class="CoModesResults",
   representation=representation(
     data="CoModes_data",
     model="CoModes_model",
@@ -110,8 +129,5 @@ CoModes_res <- function(input){
   param <- CoModes_param(input$pi, input$alpha)
   indiv <- CoModes_indiv(input$proba, input$tik ,input$partition)
   criteria <- CoModes_criteria(input$loglike, input$bic)
-  
-  output <- new("CoModes_res",data=data, model=model, param=param, indiv=indiv, criteria=criteria)
-  output <- Alpha_organize(output)
-  return(output)
+  return(Alpha_organize(new("CoModesResults",data=data, model=model, param=param, indiv=indiv, criteria=criteria)))
 }

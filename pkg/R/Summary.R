@@ -1,6 +1,23 @@
+###################################################################################
+##' Summary of a class [\code{\linkS4class{CoModesResults}}]  
+##'
+##'  
+##' @param x an object of class [\code{\linkS4class{CoModesResults}}]
+##' @param ... further arguments passed to or from other methods
+##'
+##' @name summary
+##' @aliases summary summary, CoModesResults-summary
+##' @docType methods
+##' @rdname summary-methods
+##' @exportMethod summary
+##'
+##' @seealso \code{\link{summary}}
+##' 
+
+
 setMethod(
   f="summary",
-  signature = c("CoModes_res"),
+  signature = c("CoModesResults"),
   definition = function(object,...) {
 
     cat("**************************************************************************************\n\n")

@@ -1,4 +1,26 @@
 
+CheckInputs <- function(x, g, Gibbs_init,  Gibbs_iter, burnin, EM_init, EM_tol){
+  if ( is.data.frame(x) == FALSE)  stop("The data set has to be a data.frame!") 
+  if ( any(is.na(x)) == TRUE) stop("Missing values are not allowed!")
+  for (j in 1:ncol(x)) {if (class(x[,j]) != "factor")  stop("Each variable must be a factor!")}
+  moda <- rep(0,ncol(x))
+  levels <- list()
+  cp_x <- x
+  for (j in 1:ncol(x)){
+    levels[[j]] <- levels(x[,j])
+    if ( length(levels[[j]])<2)
+      stop("All the factors have to be at least two levels!")
+    x[,j] <- as.numeric(x[,j])
+    moda[j] <- length(levels[[j]])
+    
+  }
+  if ((g != ceiling(g))||(g<1)) stop("Class number has to be integer!")
+  if ((Gibbs_iter != ceiling(Gibbs_iter))||(Gibbs_iter<1)) stop("Gibbs_iter has to be integer!")
+  if ((burnin != ceiling(burnin))||(burnin<1)) stop("burnin has to be integer!")
+  if ((Gibbs_init != ceiling(Gibbs_init))||(Gibbs_init<1)) stop("Gibbs_init has to be integer!")
+  if ((EM_init != ceiling(EM_init))||(EM_init<1)) stop("EM_init has to be integer!")
+  return(list(moda=moda, levels=levels, g=g, x=x, Gibbs_iter=Gibbs_iter,  burnin=burnin, EM_init=EM_init, EM_tol=EM_tol))
+}
 
 ComputeLevelBlock<- function(x,modalites){
   if ((class(x)=="factor") || (class(x)=="numeric")){
@@ -55,47 +77,46 @@ CondSamplingModeNumber <- function(ech, currentmodel, k, b){
   return(currentmodel)
 }
 
+xfromy <- function(y,m){
+  if (length(m)>1){
+    y <- y-1
+    for (h in 2:length(m)) m[h] <- m[h] * m[h-1]
+    x <- matrix(0,length(y),length(m))
+    for (h in length(m):2){
+      x[,h] <- y %/% m[h-1]
+      y <- y - (y%/%m[h-1])*m[h-1]
+    }
+    x[,1] <- y
+  }else{
+    x <- y
+  }
+  
+  return(x+1)
+}
 
-# compute_y <- function(x,modalites){
-#   if (length(modalites)>1){
-#     modalites <- c(1,modalites[-length(modalites)])
-#     for (loc in 2:length(modalites)){modalites[loc] <- modalites[loc]*modalites[loc-1]} 
-#   }
-#   return((x%*%modalites)+1)
-# }
-# 
-# resume_data <- function(x,sigma,modalites){
-#   y <- matrix(0,nrow(x),max(sigma))
-#   for (j in 1:max(sigma)){
-#     if (sum(sigma==j)>1){
-#       y[,j] <- compute_y(as.matrix(x[,which(sigma==j)])-1,modalites[which(sigma==j)])
-#     }else{
-#       y[,j] <- x[,which(sigma==j)]
-#     }
-#   }
-#   return(y)
-# }
-# 
-# log_pxz <- function(ech,m,el){
-#   px <- 0
-#   if (length(ech)<=el){ech <- c(ech,rep(0,el-length(ech)+1))}
-#   px <- -sum(ech[(el+1):length(ech)])*log(m-el);
-#   if (el>0){
-#     for (tmp in 1:el)    px <- px +Ibeta(1/(m-tmp+1),ech[tmp]+1,sum(ech[(tmp+1):length(ech)])+1,lower=FALSE,log=TRUE) - log(m-tmp) 
-#   }  
-#   return(px)
-# }
-# 
-# rell_bis<- function(ech,m,actu){
-#   if ((actu>1)&&(actu<(m-1))){
-#     cand <- actu-1+2*(runif(1)<1/2);
-#     if (any(c(1,m-1)==cand)){coeff <- 2}else{coeff <- 1}
-#     cand <- sort(c(actu,cand));
-#   }else if (actu==1){cand <- c(1,2);coeff <- 0.5;}else{cand <- c(actu-1,actu);coeff <- 0.5;}
-#   if (length(ech)<=cand[2]){ech <- c(ech,rep(0,cand[2]))}
-#     px <- c(-sum(ech[(cand[1]+1):length(ech)])*log(m-cand[1]) ,-sum(ech[(cand[2]+1):length(ech)])*log(m-cand[2]) )
-#     px[2] <- px[2] -log(m-cand[2]) +  Ibeta(1/(m-cand[2]+1),ech[cand[2]]+1,sum(ech[(cand[2]+1):length(ech)])+1,lower=FALSE,log=TRUE)
-#     px <- exp(px - max(px))
-#     px <- coeff*px/sum(px)
-#   return(sample(cand,1,prob=px))
-# }
+Alpha_organize <- function(output){
+  for (k in 1:output@model@nbclasses){
+    for (j in unique(output@model@sigma)){
+      vbles <- which(output@model@sigma==j)
+      m <- output@data@modalities[vbles]
+      a <- output@param@alpha[[k]][[j]]
+      if (output@model@modes[k,j]>0){
+        if (length(vbles)>1){
+          output@param@alpha[[k]][[j]] <- cbind(as.numeric(output@param@alpha[[k]][[j]]),rbind(xfromy(as.numeric(names(a[-length(a)])),m),rep(NA,length(m))))        
+          output@param@alpha[[k]][[j]] <- data.frame(output@param@alpha[[k]][[j]])
+          for (h in 2:ncol(output@param@alpha[[k]][[j]])){
+            output@param@alpha[[k]][[j]][,h] <- as.character(c(output@data@levels[[vbles[h-1]]][output@param@alpha[[k]][[j]][1:output@model@modes[k,j],h]],"."))
+          }
+          output@param@alpha[[k]][[j]][,1] <- as.numeric(output@param@alpha[[k]][[j]][,1])
+        }else{
+          output@param@alpha[[k]][[j]] <-   data.frame(probability=as.numeric(a),tmp=as.character(c(output@data@levels[[vbles]][as.numeric(names(a)[-length(a)])],".")))
+        }
+      }else{
+        output@param@alpha[[k]][[j]] <- data.frame(as.numeric(a))
+        output@param@alpha[[k]][[j]] <- cbind(output@param@alpha[[k]][[j]], matrix(".", 1, length(vbles)))
+      }
+      colnames(output@param@alpha[[k]][[j]]) <- c("probability",names(output@model@sigma[which(output@model@sigma==j)]))
+    }
+  }
+  return(output)
+}
