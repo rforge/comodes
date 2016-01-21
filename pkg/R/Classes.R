@@ -1,5 +1,22 @@
+###################################################################################
+##' Constructor of [\code{\linkS4class{CoModesData}}] class
+##'
+##'
+##' \describe{
+##'   \item{data}{data.frame It contains the observations (rows correspond to individual and column to factor)}
+##'   \item{modalities}{numeric. Number of levels for each categorical variables.}
+##'   \item{levels}{list List of the levels for each categorical variables.}
+##' }
+##'
+##' @examples
+##'   getSlots("CoModesData")
+##'
+##' @name CoModesData-class
+##' @rdname CoModesData-class
+##' @exportClass CoModesData
+##'
 setClass(
-  Class="CoModes_data",
+  Class="CoModesData",
   representation=representation(
     data="data.frame",
     modalities="numeric",
@@ -13,13 +30,30 @@ setClass(
 )
 
 CoModes_data <- function(data, modalities, levels){
-  new("CoModes_data", data=data, modalities=modalities, levels=levels)
+  new("CoModesData", data=data, modalities=modalities, levels=levels)
 }
 
 
-
+###################################################################################
+##' Constructor of [\code{\linkS4class{CoModesModel}}] class
+##'
+##'
+##'  
+##' \describe{
+##'   \item{nbclasses}{numeric. Number of components.}
+##'   \item{sigma}{numeric. Give the block where each variable is affiliated.}
+##'   \item{modes}{mqtrix. Number of modes (rows correspond to components and columns to blocks)}
+##' }
+##'
+##' @examples
+##'   getSlots("CoModesModel")
+##'
+##' @name CoModesModel-class
+##' @rdname CoModesModel-class
+##' @exportClass CoModesModel
+##'
 setClass(
-  Class="CoModes_model",
+  Class="CoModesModel",
   representation=representation(
     nbclasses="numeric",
     sigma="numeric",
@@ -33,12 +67,27 @@ setClass(
 )
 
 CoModes_model <- function(nbclasses, sigma, modes){
-  new("CoModes_model", nbclasses=nbclasses, sigma=sigma, modes=modes)
+  new("CoModesModel", nbclasses=nbclasses, sigma=sigma, modes=modes)
 }
 
-
+###################################################################################
+##' Constructor of [\code{\linkS4class{CoModesParam}}] class
+##'
+##'
+##' \describe{
+##'   \item{proportions}{numeric. Component proportions.}
+##'   \item{alpha}{list. Probabilities of the modes.}
+##' }
+##'
+##' @examples
+##'   getSlots("CoModesParam")
+##'
+##' @name CoModesParam-class
+##' @rdname CoModesParam-class
+##' @exportClass CoModesParam
+##'
 setClass(
-  Class="CoModes_param",
+  Class="CoModesParam",
   representation=representation(
     proportions="numeric",
     alpha="list"
@@ -50,11 +99,29 @@ setClass(
 )
 
 CoModes_param <- function(proportions, alpha){
-  new("CoModes_param", proportions=proportions, alpha=alpha)
+  new("CoModesParam", proportions=proportions, alpha=alpha)
 }
 
+###################################################################################
+##' Constructor of [\code{\linkS4class{CoModesIndiv}}] class
+##'
+##'
+##'  
+##' \describe{
+##'   \item{proba}{matrix. Posterior probability per component.}
+##'   \item{tik}{matrix. Fuzzy partition.}
+##'   \item{partition}{numeric. Hard partition.}
+##' }
+##'
+##' @examples
+##'   getSlots("CoModesIndiv")
+##'
+##' @name CoModesIndiv-class
+##' @rdname CoModesIndiv-class
+##' @exportClass CoModesIndiv
+##'
 setClass(
-  Class="CoModes_indiv",
+  Class="CoModesIndiv",
   representation=representation(
     proba="matrix",
     tik="matrix",
@@ -69,11 +136,29 @@ setClass(
 
 
 CoModes_indiv <- function(proba, tik, partition){
-  new("CoModes_indiv", proba=proba, tik=tik, partition=partition)
+  new("CoModesIndiv", proba=proba, tik=tik, partition=partition)
 }
 
+
+###################################################################################
+##' Constructor of [\code{\linkS4class{CoModesCriteria}}] class
+##'
+##'
+##'  
+##' \describe{
+##'   \item{loglike}{numeric. Log-likelihood.}
+##'   \item{bic}{numeric. BIC criterion.}
+##' }
+##'
+##' @examples
+##'   getSlots("CoModesCriteria")
+##'
+##' @name CoModesCriteria-class
+##' @rdname CoModesCriteria-class
+##' @exportClass CoModesCriteria
+##'
 setClass(
-  Class="CoModes_criteria",
+  Class="CoModesCriteria",
   representation=representation(
     loglike="numeric",
     bic="numeric"
@@ -86,20 +171,20 @@ setClass(
 
 
 CoModes_criteria <- function(loglike, bic){
-  new("CoModes_criteria", loglike=loglike, bic=bic)
+  new("CoModesCriteria", loglike=loglike, bic=bic)
 }
 
 ###################################################################################
 ##' Constructor of [\code{\linkS4class{CoModesResults}}] class
-##' 
-##' This is a class of the results of CoModes.
 ##'
+##' This S4 class contains the results from the function \link{CoModescluster}.
+##'  
 ##' \describe{
-##'   \item{data}{}
-##'   \item{model}{}
-##'   \item{param}{}
-##'   \item{indiv}{}
-##'   \item{criteria}{}
+##'   \item{data}{CoModesData. Information about the data.}
+##'   \item{model}{CoModesModel. Information about the model.}
+##'   \item{param}{CoModesParam. Information about the parameters.}
+##'   \item{indiv}{CoModesIndiv. Information about the individuals.}
+##'   \item{criteria}{CoModesCriteria. Information about the criteria.}
 ##' }
 ##'
 ##' @examples
@@ -112,11 +197,11 @@ CoModes_criteria <- function(loglike, bic){
 setClass(
   Class="CoModesResults",
   representation=representation(
-    data="CoModes_data",
-    model="CoModes_model",
-    param="CoModes_param",
-    indiv="CoModes_indiv",
-    criteria="CoModes_criteria"
+    data="CoModesData",
+    model="CoModesModel",
+    param="CoModesParam",
+    indiv="CoModesIndiv",
+    criteria="CoModesCriteria"
   )
 )
 

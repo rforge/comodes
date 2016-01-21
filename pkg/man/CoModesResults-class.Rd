@@ -5,15 +5,14 @@
 \alias{CoModesResults-class}
 \title{Constructor of [\code{\linkS4class{CoModesResults}}] class}
 \description{
-This is a class of the results of CoModes.
-}
-\details{
+This S4 class contains the results from the function \link{CoModescluster}.
+ 
 \describe{
-  \item{data}{}
-  \item{model}{}
-  \item{param}{}
-  \item{indiv}{}
-  \item{criteria}{}
+  \item{data}{CoModesData. Information about the data.}
+  \item{model}{CoModesModel. Information about the model.}
+  \item{param}{CoModesParam. Information about the parameters.}
+  \item{indiv}{CoModesIndiv. Information about the individuals.}
+  \item{criteria}{CoModesCriteria. Information about the criteria.}
 }
 }
 \examples{

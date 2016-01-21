@@ -1,7 +1,7 @@
 Package: CoModes
 Type: Package
 Title: This package performs clustering for categorical dataset by using a  conditional modes mixture model
-Version: 0.1
+Version: 1.0
 Date: 2016-01-20
 Author: Matthieu Marbac & Christophe Biernacki & Vincent Vandewalle
 Maintainer: Matthieu Marbac <matthieu.marbac@gmail.com>
