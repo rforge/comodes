@@ -9,8 +9,8 @@ The Seabirds data set is a biological data set describing 153 puffins (seabirds)
 }
 \details{
 \itemize{
-\item{birds:}{plumage and external morphological characteristics}
-\item{species: }{dichrous, lherminieri and subalaris}
+\item{obs: }{plumage and external morphological characteristics}
+\item{class: }{dichrous, lherminieri and subalaris}
 }
 }
 \examples{

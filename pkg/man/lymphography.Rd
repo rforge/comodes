@@ -9,7 +9,7 @@ This lymphography domain was obtained from the University Medical Centre, Instit
 }
 \details{
 \itemize{
-\item{x:}{Observed variables}
+\item{obs: }{Observed variables}
 \item{class: }{normal find, metastases, malign lymph, fibrosis}
 }
 

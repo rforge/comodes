@@ -37,7 +37,14 @@
 ##'
 ##' @examples
 ##' \dontrun{
-##' a=1
+##' # Data Loading
+##' data(alzheimer)
+##' # Model selection and Parameter estimation for CMM with 2 components (8 MCMC chains are used for model selection)
+##' results <- CoModescluster(alzheimer, 2, 8)
+##' # Summary of the results
+##' summary(results)
+##' # Display the probabilities of the modes
+##' barplot(results)
 ##' }
 ##' 
 
@@ -50,12 +57,8 @@ NULL
 ##' Informations are available here: \url{http://archive.ics.uci.edu/ml/datasets/Acute+Inflammations}
 ##' 
 ##' \itemize{
-##' \item{acute[,1]: }{Temperature of patient (35C-42C)}
-##' \item{acute[,2]: }{Occurrence of nausea (yes,no)}
-##' \item{acute[,3]: }{Lumbar pain (yes,no)}
-##' \item{acute[,4]: }{Urine pushing (continuous need for urination) (yes,no)}
-##' \item{acute[,5]: }{Micturition pains (yes,no)}
-##' \item{acute[,6]: }{Burning of urethra, itch, swelling of urethra outlet (yes,no)}
+##' \item{obs: }{Patients described by six variables Temperature of patient (35C-42C), occurrence of nausea (yes,no),
+##'  lumbar pain (yes,no), urine pushing (continuous need for urination) (yes,no), mMicturition pains (yes,no), burning of urethra, itch, swelling of urethra outlet (yes,no)}
 ##' \item{urin: }{Inflammation of urinary bladder (yes,no)}
 ##' \item{renal: }{Nephritis of renal pelvis origin (yes,no)}
 ##' \item{urinrenal: }{Inflammation of urinary bladder  and Nephritis of renal pelvis origin (1:no-no, 2:yes-no, 3:no-yes, 4:yes-yes)} 
@@ -79,7 +82,7 @@ NULL
 ##' This lymphography domain was obtained from the University Medical Centre, Institute of Oncology, Ljubljana, Yugoslavia.  Thanks go to M. Zwitter and M. Soklic for providing the data.
 ##'
 ##' \itemize{
-##' \item{x:}{Observed variables}
+##' \item{obs: }{Observed variables}
 ##' \item{class: }{normal find, metastases, malign lymph, fibrosis}
 ##' }
 ##'
@@ -101,8 +104,8 @@ NULL
 ##' 
 ##' 
 ##' \itemize{
-##' \item{birds:}{plumage and external morphological characteristics}
-##' \item{species: }{dichrous, lherminieri and subalaris}
+##' \item{obs: }{plumage and external morphological characteristics}
+##' \item{class: }{dichrous, lherminieri and subalaris}
 ##' }
 ##' 
 ##' 
@@ -114,6 +117,21 @@ NULL
 ##' 
 ##' @examples
 ##'   data(seabirds)
+NULL
+
+##' Real categorical data: alzheimer
+##' 
+##' Presence or absence of 6 symptoms of Alzheimer's disease (AD) in 240 patients diagnosed with early onset AD conducted in the Mercer Institute in St. James's Hospital, Dublin.
+##' A binary matrix, consisting of 240 rows and 6 columns, with each row denoting an individual and each column denoting the presence/absence of one of the 6 symptoms: Hallucination, Activity, Aggression, Agitation, Diurnal and Affective. A 1 denotes the presence of a symptom, a 0 the absence
+##' 
+##' @references Moran M, Walsh C, Lynch A, Coen RF, Coakley D and Lawlor B (2004). Syndromes of behavioural and psychological symptoms in mild Alzheimer's disease. International Journal of Geriatric Psychiatry, 19(4), 359-364.
+##' @references White A and Muprhy T (2014). BayesLCA: An R Pacakge for Bayesian Latent Class Analysis. Journal of Statistical Software, 61(13),1-28                                   
+##' @name alzheimer
+##' @docType data
+##' @keywords datasets
+##' 
+##' @examples
+##'   data(alzheimer)
 NULL
 
 
@@ -149,7 +167,14 @@ OneAnalysis <- function(nb, input){
 ##'
 ##' @examples
 ##' \dontrun{
-##' ess
+##' # Data Loading
+##' data(alzheimer)
+##' # Model selection and Parameter estimation for CMM with 2 components (8 MCMC chains are used for model selection)
+##' results <- CoModescluster(alzheimer, 2, 8)
+##' # Summary of the results
+##' summary(results)
+##' # Display the probabilities of the modes
+##' barplot(results)
 ##' }
 ##'
 ##' @return Returns an instance of the [\code{\linkS4class{CoModesResults}}] class. 

@@ -62,11 +62,12 @@ setMethod(
           for (k in 2:height@model@nbclasses) modes <- rbind(modes, height@param@alpha[[k]][[j]][,-1])
           modes <- as.matrix(modes)
           for (h in 1:nrow(modes)){
-            if (h<=nrow(modes))
-            who <- which(rowSums(sweep(modes, 2, modes[h,], "==")) == ncol(modes))
-            if (length(who)>1){
-              modes <- modes[- who[which(who!=h)],]
-            } 
+            if (h<=nrow(modes)){
+              who <- which(rowSums(sweep(modes, 2, modes[h,], "==")) == ncol(modes))
+              if (length(who)>1){
+                modes <- modes[- who[which(who!=h)],]
+              } 
+            }
           }
           proba <- matrix(NA, nrow(modes),height@model@nbclasses)
           for (k in 1:height@model@nbclasses){

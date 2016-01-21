@@ -11,12 +11,8 @@ The data was created by a medical expert as a data set to test the expert system
 Informations are available here: \url{http://archive.ics.uci.edu/ml/datasets/Acute+Inflammations}
 
 \itemize{
-\item{acute[,1]: }{Temperature of patient (35C-42C)}
-\item{acute[,2]: }{Occurrence of nausea (yes,no)}
-\item{acute[,3]: }{Lumbar pain (yes,no)}
-\item{acute[,4]: }{Urine pushing (continuous need for urination) (yes,no)}
-\item{acute[,5]: }{Micturition pains (yes,no)}
-\item{acute[,6]: }{Burning of urethra, itch, swelling of urethra outlet (yes,no)}
+\item{obs: }{Patients described by six variables Temperature of patient (35C-42C), occurrence of nausea (yes,no),
+ lumbar pain (yes,no), urine pushing (continuous need for urination) (yes,no), mMicturition pains (yes,no), burning of urethra, itch, swelling of urethra outlet (yes,no)}
 \item{urin: }{Inflammation of urinary bladder (yes,no)}
 \item{renal: }{Nephritis of renal pelvis origin (yes,no)}
 \item{urinrenal: }{Inflammation of urinary bladder  and Nephritis of renal pelvis origin (1:no-no, 2:yes-no, 3:no-yes, 4:yes-yes)} 

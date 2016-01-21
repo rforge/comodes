@@ -30,6 +30,8 @@ setMethod(
     
     cat("Class number:", object@model@nbclasses , "    log-likelihood:",object@criteria@loglike,  "    BIC:",object@criteria@bic, "\n")
     
+    cat("Block of the variables:", object@model@sigma, "\n")
+    
     cat("\n*************************************\n")
     
     
@@ -51,20 +53,20 @@ setMethod(
     tau <- matrix(0,nrow(kappa),ncol(kappa))
     for (k in 1:nrow(tau)){
       for (j in 1:ncol(tau)){
-        tau[k,j] <- sum(object@param@alpha[[k]][[j]][1:object@model@modes[k,j],1])
+        if (object@model@modes[k,j]>0) tau[k,j] <- sum(object@param@alpha[[k]][[j]][1:object@model@modes[k,j],1])
       }
     }
     
     rownames(tau) <- rownames(kappa)
     colnames(tau) <- colnames(kappa)
     
-    cat("Tau index:", "\n" )
-    print(tau)
+    cat("AlphakjDot index:", "\n" )
+    print(round(tau,2))
     
     cat("\n*************************************\n\n")
     
-    cat("Kappa index", "\n")
-    print(kappa)
+    cat("Ukjbar index", "\n")
+    print(round(kappa,2))
     cat("\n**************************************************************************************\n")
   }
 )

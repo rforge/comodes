@@ -34,7 +34,14 @@ x, g, Gibbs_init=30,  Gibbs_iter=min(4000,(ncol(x)*400)), burnin=min(ncol(x)*400
 }
 \examples{
 \dontrun{
-ess
+# Data Loading
+data(alzheimer)
+# Model selection and Parameter estimation for CMM with 2 components (8 MCMC chains are used for model selection)
+results <- CoModescluster(alzheimer, 2, 8)
+# Summary of the results
+summary(results)
+# Display the probabilities of the modes
+barplot(results)
 }
 
 }
