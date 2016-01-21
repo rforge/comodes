@@ -133,7 +133,29 @@ OneAnalysis <- function(nb, input){
 }
 
 
-
+###################################################################################
+##' Create an instance of the [\code{\linkS4class{CoModesResults}}] class
+##'
+##' This function performs the model selection and the parameter inference.
+##' x, g, Gibbs_init=30,  Gibbs_iter=min(4000,(ncol(x)*400)), burnin=min(ncol(x)*400,4000), EM_init=25, EM_tol=10^(-3), nbcores=Gibbs_init
+##' @param x data.frame, where each column is a factor.
+##' @param g integer, defines the number of components.
+##' @param Gibbs_init integer, number of chains performed for model selection (default 30).
+##' @param Gibbs_iter integer, number of iterations of the MCMC algorithm for model selection (default min(ncol(x)*400,4000))
+##' @param burnin integer, number of iterations of the burn-in of the MCMC algorithm (default min(ncol(x)*400,4000))
+##' @param EM_init integer, number of runs of EM algorithm for parameter inference (default 25)
+##' @param EM_tol numeric, tolerance for the stopping criterion of the EM algorithm (default 0.001)
+##' @param nbcores number of cores used by the algorithm (only for Linux and MAC). (default Gibbs_init)
+##'
+##' @examples
+##' \dontrun{
+##' ess
+##' }
+##'
+##' @return Returns an instance of the [\code{\linkS4class{CoModesResults}}] class. 
+##' @export
+##'
+##'
 CoModescluster <- function(x, g, Gibbs_init=30,  Gibbs_iter=min(4000,(ncol(x)*400)), burnin=min(ncol(x)*400,4000), EM_init=25, EM_tol=10^(-3), nbcores=Gibbs_init){
   input <- CheckInputs(x, g, Gibbs_init,  Gibbs_iter, burnin, EM_init, EM_tol)
   nbcores <- min(detectCores(all.tests = FALSE, logical = FALSE), nbcores)
