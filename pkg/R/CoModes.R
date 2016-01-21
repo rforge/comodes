@@ -47,7 +47,7 @@ NULL
 ##' 
 ##' The data was created by a medical expert as a data set to test the expert system, which will perform the presumptive diagnosis of two diseases of urinary system. The basis for rules detection was Rough Sets Theory. Each instance represents an potential patient. Here the first variable has been modified to only take integer value.
 ##'
-##' Informations are available here: http://archive.ics.uci.edu/ml/datasets/Acute+Inflammations
+##' Informations are available here: \url{http://archive.ics.uci.edu/ml/datasets/Acute+Inflammations}
 ##' 
 ##' \itemize{
 ##' \item{acute[,1]: }{Temperature of patient (35C-42C)}
@@ -83,7 +83,7 @@ NULL
 ##' \item{class: }{normal find, metastases, malign lymph, fibrosis}
 ##' }
 ##'
-##' Informations are available here: http://archive.ics.uci.edu/ml/datasets/Lymphography
+##' Informations are available here: \url{http://archive.ics.uci.edu/ml/datasets/Lymphography}
 ##' 
 ##' 
 ##' @name lymphography

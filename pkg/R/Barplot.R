@@ -7,22 +7,23 @@
 ##' Each line corresponds to one block of variable. Barplot is drawn for each cluster with the probabilities for 
 ##' each level (with is a mode for at least on cluster) to be in that cluster.
 ##'  
-##' @param x an object of class [\code{\linkS4class{CoModesResults}}]
-##' @param ... further arguments passed to or from other methods
-##'
-##' @importFrom graphics barplot
-##' @name barplot
-##' @aliases barplot barplot, CoModesResults-method
-##' @docType methods
-##' @rdname barplot-methods
-##' @exportMethod barplot
-##'
-##' @seealso \code{\link{barplot}}
-##'
+##' @param height an object of class [\code{\linkS4class{CoModesResults}}]
+#' @name barplot
+#' @rdname barplot-methods
+#' @docType methods
+#' @exportMethod summary
+#' 
+#' 
+NULL
+
+#' @rdname barplot-methods
+#' @aliases barplot barplot,CoModesResults-method
+#'
+
 setMethod(
   f="barplot",
   signature = c("CoModesResults"),
-  definition = function(height,...) {
+  definition = function(height) {
     
     op <- par(no.readonly = TRUE) # the whole list of settable par's.
     # changing marging

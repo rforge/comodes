@@ -2,22 +2,16 @@
 % Please edit documentation in R/Summary.R
 \docType{methods}
 \name{summary}
-\alias{CoModesResults-summary}
 \alias{summary}
-\alias{summary,}
+\alias{summary,CoModesResults-method}
 \title{Summary of a class [\code{\linkS4class{CoModesResults}}]}
 \usage{
-\S4method{summary}{CoModesResults}(object, ...)
+\S4method{summary}{CoModesResults}(object)
 }
 \arguments{
-\item{...}{further arguments passed to or from other methods}
-
-\item{x}{an object of class [\code{\linkS4class{CoModesResults}}]}
+\item{object}{an object of class [\code{\linkS4class{CoModesResults}}]}
 }
 \description{
 Summary of a class [\code{\linkS4class{CoModesResults}}]
-}
-\seealso{
-\code{\link{summary}}
 }
 

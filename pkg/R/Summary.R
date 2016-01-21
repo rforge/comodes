@@ -2,23 +2,24 @@
 ##' Summary of a class [\code{\linkS4class{CoModesResults}}]  
 ##'
 ##'  
-##' @param x an object of class [\code{\linkS4class{CoModesResults}}]
-##' @param ... further arguments passed to or from other methods
+##' @param object an object of class [\code{\linkS4class{CoModesResults}}]
 ##'
-##' @name summary
-##' @aliases summary summary, CoModesResults-summary
-##' @docType methods
-##' @rdname summary-methods
-##' @exportMethod summary
-##'
-##' @seealso \code{\link{summary}}
-##' 
+#' @name summary
+#' @rdname summary-methods
+#' @docType methods
+#' @exportMethod summary
+#' 
+#' 
+NULL
 
+#' @rdname summary-methods
+#' @aliases summary summary,CoModesResults-method
+#'
 
 setMethod(
   f="summary",
   signature = c("CoModesResults"),
-  definition = function(object,...) {
+  definition = function(object) {
 
     cat("**************************************************************************************\n\n")
     cat("Number of variables:", ncol(object@data@data), "    Number of individuals:",length(object@indiv@partition), "\n" )

@@ -13,7 +13,7 @@ This lymphography domain was obtained from the University Medical Centre, Instit
 \item{class: }{normal find, metastases, malign lymph, fibrosis}
 }
 
-Informations are available here: http://archive.ics.uci.edu/ml/datasets/Lymphography
+Informations are available here: \url{http://archive.ics.uci.edu/ml/datasets/Lymphography}
 }
 \examples{
   data(lymphography)
