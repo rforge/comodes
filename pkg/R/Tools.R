@@ -56,7 +56,6 @@ LogIntComDataLikeBlockCompo <- function(ech, m, el){
     nk <- sum(ech)
     cummodes <- cumsum(ech[1:el])
     nonmodes <- nk - sum(ech[1:el])
-    
     px <- - nonmodes * log(m-el)
     for (h in 1:el)    px <- px + Ibeta(1/(m-h+1), ech[h]+1 , nk-cummodes[h]+1,lower=FALSE,log=TRUE) - log(m-h)     
 #     px <- -sum(ech[(el+1):length(ech)])*log(m-el)
@@ -78,8 +77,8 @@ CondSamplingModeNumber <- function(ech, currentmodel, k, b){
   }else{
     candidatesmodes <- currentmodel$ell[k,b] + sample(c(-1,1),1)
   }
-  if ( (candidatesmodes==1) || (candidatesmodes==(currentmodel$blocklevels[b]-1))) ratio <- ratio / 2
-  if ( (currentmodes==1) || (currentmodes==(currentmodel$blocklevels[b]-1))) ratio <- ratio * 2
+  if ( (candidatesmodes==1) || (candidatesmodes==(currentmodel$blocklevels[b]-1))) ratio <- ratio * 2
+  if ( (currentmodes==1) || (currentmodes==(currentmodel$blocklevels[b]-1))) ratio <- ratio / 2
   ratio <- log(ratio) + LogIntComDataLikeBlockCompo(ech, currentmodel$blocklevels[b], candidatesmodes) - LogIntComDataLikeBlockCompo(ech, currentmodel$blocklevels[b], currentmodes)
   if (runif(1)<exp(ratio)) currentmodel$ell[k,b] <- candidatesmodes
   return(currentmodel)
