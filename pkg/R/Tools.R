@@ -51,11 +51,19 @@ ComputeLevelAllBlock <- function(x, sigma, modalites){
 
 LogIntComDataLikeBlockCompo <- function(ech, m, el){
   px <- 0
-  if (length(ech)<=el){ech <- c(ech,rep(0,el-length(ech)+1))}
-  px <- -sum(ech[(el+1):length(ech)])*log(m-el);
   if (el>0){
-    for (tmp in 1:el)    px <- px +Ibeta(1/(m-tmp+1),ech[tmp]+1,sum(ech[(tmp+1):length(ech)])+1,lower=FALSE,log=TRUE) - log(m-tmp) 
-  }  
+    if (length(ech)<=el) ech <- c(ech,rep(0, el-length(ech)+1))
+    nk <- sum(ech)
+    cummodes <- cumsum(ech[1:el])
+    nonmodes <- nk - sum(ech[1:el])
+    
+    px <- - nonmodes * log(m-el)
+    for (h in 1:el)    px <- px + Ibeta(1/(m-h+1), ech[h]+1 , nk-cummodes[h]+1,lower=FALSE,log=TRUE) - log(m-h)     
+#     px <- -sum(ech[(el+1):length(ech)])*log(m-el)
+#     for (tmp in 1:el)    px <- px +Ibeta(1/(m-tmp+1), ech[tmp]+1 ,sum(ech[(tmp+1):length(ech)])+1,lower=FALSE,log=TRUE) - log(m-tmp)     
+  }else{
+    px <- - sum(ech)*log(m)
+  }
   return(px)
 }
 
@@ -66,7 +74,7 @@ CondSamplingModeNumber <- function(ech, currentmodel, k, b){
   if (currentmodel$ell[k,b] == 0){
     candidatesmodes <- currentmodel$ell[k,b] + 1
   }else if (currentmodel$ell[k,b] == (currentmodel$blocklevels[b]-1)){
-    candidatesmodes <- currentmodel$ell[k,b]- 1
+    candidatesmodes <- currentmodel$ell[k,b] - 1
   }else{
     candidatesmodes <- currentmodel$ell[k,b] + sample(c(-1,1),1)
   }

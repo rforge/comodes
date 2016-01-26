@@ -28,7 +28,7 @@ GenerateCandidate <- function(model, modalities){
     model_cand$ell[,bfrom] <- 0
     ratioproba <- ratioproba * (model$blocklevels[bfrom]-1)
   }  
-  return(list(model=model_cand, bto=bto, bfrom=bfrom, var=var, ratioproba=ratioproba))
+  return(list(model=model_cand, bto=bto, bfrom=bfrom, var=var, ratioproba=ratioproba, modelseed=model))
 }
 
 CopyModel <- function(input, modalities){
@@ -56,13 +56,17 @@ CMM_model <- function(x, modalities, g, burnin, nbiter){
   eff_sigma <- 0
   sauv_ell <- list()  
   for (it in 1:(burnin+nbiter)){
-    #échantillonnage des appartenances des individus aux classes"
+    #échantillonnage des appartenances des individus aux classes
     z <- apply(proba, 1, function(sa) sample(1:length(sa),1, prob = sa))
-    #save(z, currentmodel, file = "current.rda")
+    save(z, currentmodel, file = "current.rda")
+    step <- 1
+    save(step, it, file="info.rda")
     ### saut de model
     # generation du candidat
     candidate <- GenerateCandidate(currentmodel, modalities)
-    #save(candidate, file = "candidate.rda")
+    save(candidate, file = "candidate.rda")
+    step <- 2
+    save(step, it, file="info.rda")
     # ratio contains is the logarithm of the ratio between the probability of the model generation
     ratio <- log(candidate$ratioproba)
     # ratio is updated on the part of the integrated complete-data likelihood of the candidate and current models
@@ -76,51 +80,76 @@ CMM_model <- function(x, modalities, g, burnin, nbiter){
         if (any(currentmodel$sigma==candidate$bto)) ratio <- ratio - LogIntComDataLikeBlockCompo(sort(table(y[which(z==k), candidate$bto]), decreasing=TRUE), currentmodel$blocklevels[candidate$bto], currentmodel$ell[k,candidate$bto])
       }      
     }
+    save(candidate, ratio, file = "candidate2.rda")
+    step <- 3
+    save(step, it, file="info.rda")
     # acceptation rejet
     if (runif(1)<exp(ratio)){
       currentmodel <- CopyModel(candidate$model, modalities)
       y <- ComputeLevelAllBlock(x, currentmodel$sigma, modalities)
     }
+    save(currentmodel, ratio, file = "currentmodel2.rda")
+    step <- 4
+    save(step, it, file="info.rda")
     # sampling of the number of modes
     for (k in 1:g){
       if (any(z==k)){
         for (b in 1:max(currentmodel$sigma)) currentmodel <- CondSamplingModeNumber(sort(table(y[which(z==k), b]), decreasing=TRUE), currentmodel, k, b)
       }
     }
+    save(currentmodel, file = "currentmodel3.rda")
+    step <- 5
+    save(step, it, file="info.rda")
     # computation of the conditional probabilities of the component memberships by sampling the continuous parameters of the current model
-    proba <- matrix(rdirichlet(1,table(c(1:g,z))+3), length(z), g, byrow=TRUE)
+    proba <- matrix(log(rdirichlet(1,table(c(1:g,z))-1/2)), length(z), g, byrow=TRUE)
+    backup <- list()
     for (k in 1:g){
+      backup[[k]] <- list()
       if (any(z==k)){
         for (b in 1:max(currentmodel$sigma)){
           if (currentmodel$ell[k,b]>0){
-            eff <- c(sort(table(c(1:currentmodel$blocklevels[b],y[which(z==k), b])), decreasing=TRUE))
-            eff <- c(eff[1:currentmodel$ell[k,b]], sum(eff) - sum(eff[1:currentmodel$ell[k,b]]))
+            tmp <- sort(table(y[which(z==k), b]), decreasing=TRUE)
+            if (length(tmp)< currentmodel$ell[k,b]){
+              missing <- currentmodel$ell[k,b] - length(tmp)
+              nam <- as.numeric(names(tmp))
+              other <- 1:currentmodel$blocklevels[b]
+              tmp <- c(tmp, rep(0, missing))
+              names(tmp) <- c(nam, sample(other[-nam], missing))
+            } 
+            eff <- c(tmp[1:currentmodel$ell[k,b]], sum(tmp) - sum(tmp[1:currentmodel$ell[k,b]]))
             tmpdelta <- as.numeric(names(eff[1:currentmodel$ell[k,b]]))
             tmpalpha <- rep(0, length(eff))
             limit <- 0
             while ((limit<6) && (min(tmpalpha[1:currentmodel$ell[k,b]]) <= (tmpalpha[1+currentmodel$ell[k,b]]/(currentmodel$blocklevels[b]-currentmodel$ell[k,b])))){
-              tmpalpha <- rdirichlet(1,eff)
+              tmpalpha <- rdirichlet(1,eff+1)
               limit <- limit + 1
             }
-            if (limit==6) tmpalpha <- eff/sum(eff)
+            if (limit==6) tmpalpha <- rep(1/currentmodel$blocklevels[b],currentmodel$blocklevels[b])
             tmpalpha[currentmodel$ell[k,b]+1] <- tmpalpha[currentmodel$ell[k,b]+1]/(currentmodel$blocklevels[b]-currentmodel$ell[k,b])
           }else{
             tmpalpha <- 1/currentmodel$blocklevels[b]
           }
           tmpproba <- rep(tmpalpha[1+currentmodel$ell[k,b]], currentmodel$blocklevels[b])
           if (currentmodel$ell[k,b]>0) tmpproba[tmpdelta] <- tmpalpha[1:currentmodel$ell[k,b]]
-          proba[,k] <- proba[,k] * tmpproba[y[,b]]
+          backup[[k]][[b]] <- list(tmpproba=tmpproba, tmpalpha=tmpalpha)
+          proba[,k] <- proba[,k] + log(tmpproba[y[,b]])
         }
       }
-    }    
+    } 
+    proba <- exp(sweep(proba,1,apply(proba,1,max),"-"))
+    save(currentmodel, proba, z, y, file = "currentmodel4.rda")
+    step <- 6
+    save(step, it, file="info.rda")
     if (it>burnin){
-      if (any(rowSums(sweep(sauv_sigma,2,currentmodel$sigma,"=="))==ncol(x))){
-        repere <- which(rowSums(sweep(sauv_sigma,2,currentmodel$sigma,"=="))==ncol(x))
+      save(currentmodel, file = "currentmodel5.rda")
+      repere <- which(rowSums(sweep(sauv_sigma,2,currentmodel$sigma,"=="))==ncol(x))
+      if (length(repere)>0){        
         eff_sigma[repere] <- 1 + eff_sigma[repere]
         for (k in 1:currentmodel$g){
           for (j in 1:max(currentmodel$sigma)){
-            if(any(sauv_ell[[repere]][[k]][[j]][,1]==currentmodel$ell[k,j])){
-              sauv_ell[[repere]][[k]][[j]][which(sauv_ell[[repere]][[k]][[j]][,1]==currentmodel$ell[k,j]),2] <- 1 + sauv_ell[[repere]][[k]][[j]][which(sauv_ell[[repere]][[k]][[j]][,1]==currentmodel$ell[k,j]),2]
+            reperemode <- which(sauv_ell[[repere]][[k]][[j]][,1]==currentmodel$ell[k,j])
+            if (length(reperemode)>0){
+              sauv_ell[[repere]][[k]][[j]][reperemode,2] <- 1 + sauv_ell[[repere]][[k]][[j]][reperemode,2]
             }else{
               sauv_ell[[repere]][[k]][[j]] <- rbind(sauv_ell[[repere]][[k]][[j]],c(currentmodel$ell[k,j],1))
             }
@@ -136,6 +165,10 @@ CMM_model <- function(x, modalities, g, burnin, nbiter){
           for (j in 1:max(currentmodel$sigma)) sauv_ell[[repere]][[k]][[j]] <- matrix(c(currentmodel$ell[k,j],1),1,2)
         }
       }
+      
+      save(currentmodel, file = "currentmodel6.rda")
+      step <- 7
+      save(step, it, file="info.rda")
     }   
   }
   return(list(sauv_sigma=sauv_sigma,eff_sigma=eff_sigma,sauv_modes=sauv_ell)) 

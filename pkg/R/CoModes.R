@@ -136,9 +136,13 @@ NULL
 
 
 OneAnalysis <- function(nb, input){
+  setwd(paste("/home/marbacm/recherche/modes_qualitatifs/ADAC/experiences_refaites/applications/",nb,sep=""))
+   print("model")
   res <- CMM_model(input$x, input$moda, input$g, input$burnin, input$Gibbs_iter)
-  selectedmodel <- list(g=input$g, sigma=res$sauv_sigma[which(res$eff_sigma==max(res$eff_sigma))[1],])
-  tmp_ell <- res$sauv_modes[[which(res$eff_sigma==max(res$eff_sigma))[1]]]
+   print("modelok")
+   save(res, file = "res.rda")
+  selectedmodel <- list(g=input$g, sigma=res$sauv_sigma[which.max(res$eff_sigma),])
+  tmp_ell <- res$sauv_modes[[which.max(res$eff_sigma)]]
   selectedmodel$ell <- matrix(0, input$g, max(selectedmodel$sigma))
   for (k in 1:input$g){
     for (j in 1:max(selectedmodel$sigma))  selectedmodel$ell[k,j] <- tmp_ell[[k]][[j]][which(tmp_ell[[k]][[j]][,2]==max(tmp_ell[[k]][[j]][,2]))[1],1]
@@ -146,7 +150,10 @@ OneAnalysis <- function(nb, input){
   selectedmodel$blocklevels <- rep(0, max(selectedmodel$sigma))
   for (j in 1:max(selectedmodel$sigma)) selectedmodel$blocklevels[j] <- prod(input$moda[which(selectedmodel$sigma==j)])
   y <- ComputeLevelAllBlock(input$x, selectedmodel$sigma, input$moda)
+   print("MLE")
   res_model <- CMM_MLE(y, selectedmodel,  input$EM_init, input$EM_tol)
+   print("MLEok")
+   save(res_model, file = "resmodel.rda")
   return(res_model)
 }
 
@@ -195,7 +202,7 @@ CoModescluster <- function(x, g, Gibbs_init=30,  Gibbs_iter=min(4000,(ncol(x)*40
   }  
   
   allbic <- rep(-Inf, Gibbs_init)
-  for (it in 1:Gibbs_init) allbic <- output[[it]]$bic
+  for (it in 1:Gibbs_init) allbic[it] <- output[[it]]$bic
   output <- output[[which.max(allbic)]]
   
   output$data <- x
