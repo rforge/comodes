@@ -48,10 +48,11 @@ XEM <- function(x, model, tol){
         modes <- as.numeric(names(tmp))[1:model$ell[k,j]]
         tmp <- c(tmp[1:model$ell[k,j]]+1, sum(tmp)-sum(tmp[1:model$ell[k,j]])+1) / (sum(tik[,k])+model$ell[k,j]+1)
         alpha[[k]][[j]] <- tmp
+        alpha[[k]][[j]][model$ell[k,j]+1] <- alpha[[k]][[j]][model$ell[k,j]+1]/(model$blocklevels[j] - model$ell[k,j])
         names(alpha[[k]][[j]])  <- c(modes,"other")
       }else{
-        alpha[[k]][[j]] <- rep(1/model$blocklevels[j],model$blocklevels[j])
-        names(alpha[[k]][[j]]) <- 1:model$blocklevels[j]
+        alpha[[k]][[j]] <- rep(1/model$blocklevels[j],1)
+        names(alpha[[k]][[j]]) <- "other"
       }
     }
   }
